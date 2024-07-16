@@ -1,9 +1,10 @@
 const morgan = require('morgan')
 const express = require('express')
+const cors = require('cors')
+
 const app = express()
-
-
 app.use(express.json())
+app.use(cors())
 
 morgan.token('body', (request) => JSON.stringify(request.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
@@ -93,6 +94,38 @@ app.post('/api/persons', (request, response) => {
 	persons = persons.concat(person)
 
 	response.json(person)
+})
+
+app.put('/api/persons/:id', (request, response) => {
+	const body = request.body
+	const id = request.params.id
+	const person = persons.find(person => person.id === id)
+
+	if (!person) {
+		return response.status(404).end()
+	}
+
+	if (!body.name) {
+		return response.status(400).json({ 
+			error: 'name missing' 
+		})
+	}
+
+	if (!body.number) {
+		return response.status(400).json({ 
+			error: 'number missing' 
+		})
+	}
+
+	const personObject = {
+		name: body.name,
+		number: body.number,
+		id: person.id
+	}
+
+	persons = persons.concat(personObject)
+
+	response.json(personObject)
 })
 
 const PORT = 3001
