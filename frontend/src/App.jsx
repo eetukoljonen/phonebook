@@ -98,7 +98,7 @@ const App = () => {
 				.deletePerson(id)
 				.then(deletedPerson => {
 					setPersons(persons.filter(person => person.id !== id))
-					showNotification(`Deleted ${deletedPerson.name}`, 'success')
+					showNotification(`Deleted ${name}`, 'success')
 				})
 		}
 	}
